@@ -1,3 +1,6 @@
+#ifndef ORBITS_ORBITAL_BODY_H
+#define ORBITS_ORBITAL_BODY_H
+
 /* TYPES */
 typedef struct {
     double mass;
@@ -18,3 +21,5 @@ double* gravitational_force_vector(Body* b1, Body* b2);
 double* acceleration_vector(Body* b1, Body* b2);
 // Calculate the new velocities and positions of b1 due to b2 at time difference dt
 void calculate_and_set_velocities_and_positions(Body* b1, Body* b2, double dt);
+
+#endif

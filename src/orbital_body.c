@@ -58,18 +58,18 @@ void calculate_and_set_velocities_and_positions(Body* b1, Body* b2, double dt) {
     b1->z += b1->vz * dt;
 }
 
-int main() {
-    Body b1 = {5e24, 0, 0, 0, 0, 5e3, 0, 2.44e6, "b1"};
-    Body b2 = {6e24, 1.5e11, 0, 0, 0, 3e4, 0, 3.39e6, "b2"};
+// int main() {
+//     Body b1 = {5e24, 0, 0, 0, 0, 5e3, 0, 2.44e6, "b1"};
+//     Body b2 = {6e24, 1.5e11, 0, 0, 0, 3e4, 0, 3.39e6, "b2"};
 
-    double dt = 0;
-    while (true) {
-        calculate_and_set_velocities_and_positions(&b1, &b2, dt);
-        printf("dt: %f\n", dt);
-        printf("b1: %f %f %f\n", b1.x, b1.y, b1.z);
-        printf("b2: %f %f %f\n", b2.x, b2.y, b2.z);
-        printf("\n\n");
-        dt += 1;
-        sleep(1);
-    }
-}
+//     double dt = 0;
+//     while (true) {
+//         calculate_and_set_velocities_and_positions(&b1, &b2, dt);
+//         printf("dt: %f\n", dt);
+//         printf("b1: %f %f %f\n", b1.x, b1.y, b1.z);
+//         printf("b2: %f %f %f\n", b2.x, b2.y, b2.z);
+//         printf("\n\n");
+//         dt += 1;
+//         sleep(1);
+//     }
+// }
