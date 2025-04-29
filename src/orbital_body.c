@@ -1,75 +1,55 @@
-#include "../include/orbital_body.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <unistd.h>
+#include "orbital_body.h"
 #include <math.h>
 
 double abs_distance(Body* b1, Body* b2) {
-    double dx = b1->x - b2->x;
-    double dy = b1->y - b2->y;
-    double dz = b1->z - b2->z;
+    double dx = b1->position.x - b2->position.x;
+    double dy = b1->position.y - b2->position.y;
+    double dz = b1->position.z - b2->position.z;
+
     return sqrt(dx*dx + dy*dy + dz*dz);
 }
 
-double* distance_vector(Body* b1, Body* b2) {
-    double* vec = (double*) malloc (3 * sizeof(double));
-    double distance = abs_distance(b1, b2);
-    vec[0] = abs(b1->x - b2->x) / distance;
-    vec[1] = abs(b1->y - b2->y) / distance;
-    vec[2] = abs(b1->z - b2->z) / distance;
+Vector3 unit_vector_given_distance(Body* b1, Body* b2, double distance) {
+    Vector3 vec;
+    vec.x = (b1->position.x - b2->position.x) / distance;
+    vec.y = (b1->position.y - b2->position.y) / distance;
+    vec.z = (b1->position.z - b2->position.z) / distance;
+
     return vec;
 }
 
-double* gravitational_force_vector(Body* b1, Body* b2) {
+Vector3 grav_force_vect_between_two_bodies(Body* b1, Body* b2) {
+    Vector3 force_vector;
+
     double r = abs_distance(b1, b2);
-    double abs_force = G * b1->mass * b2->mass / (r*r);
-    printf("b1->mass: %f\n", b1->mass);
-    double* vec = distance_vector(b1, b2);
-    double force_x = abs_force * vec[0];
-    double force_y = abs_force * vec[1];
-    double force_z = abs_force * vec[2];
-    free(vec);
-    double* force = (double*) malloc (3 * sizeof(double));
-    force[0] = force_x;
-    force[1] = force_y;
-    force[2] = force_z;
-    return force;
+    double abs_force = G * b1->mass * b2->mass / (r*r); // Newton's law of gravitation (G * m1 * m2 / r^2) is magnitude of force
+
+    Vector3 r_unit = unit_vector_given_distance(b1, b2, r);
+    force_vector.x = abs_force * r_unit.x;
+    force_vector.y = abs_force * r_unit.y;
+    force_vector.z = abs_force * r_unit.z;
+
+    return force_vector;
 }
 
-double* acceleration_vector(Body* b1, Body* b2) {
-    double* force = gravitational_force_vector(b1, b2);
-    double* acc = (double*) malloc (3 * sizeof(double));
-    acc[0] = force[0] / b1->mass;
-    acc[1] = force[1] / b1->mass;
-    acc[2] = force[2] / b1->mass;
-    free(force);
+Vector3 acceleration_vector(Body* b1, Vector3 force) {
+    Vector3 acc;
+    acc.x = force.x / b1->mass;
+    acc.y = force.y / b1->mass;
+    acc.z = force.z / b1->mass;
+
     return acc;
 }
 
-void calculate_and_set_velocities_and_positions(Body* b1, Body* b2, double dt) {
-    double* acc = acceleration_vector(b1, b2);
-    b1->vx += acc[0] * dt;
-    b1->vy += acc[1] * dt;
-    b1->vz += acc[2] * dt;
-    free(acc);
-    b1->x += b1->vx * dt;
-    b1->y += b1->vy * dt;
-    b1->z += b1->vz * dt;
+void update_body(Body* body, Vector3 acceleration, double dt) {
+    // Update the velocity of the body
+    // using the acceleration vector and the time difference
+    body->velocity.x = body->velocity.x + (acceleration.x * dt);
+    body->velocity.y = body->velocity.y + (acceleration.y * dt);
+    body->velocity.z = body->velocity.z + (acceleration.z * dt);
+    // Update the position of the body
+    // using the velocity vector and the time difference
+    body->position.x = body->position.x + (body->velocity.x * dt);
+    body->position.y = body->position.y + (body->velocity.y * dt);
+    body->position.z = body->position.z + (body->velocity.z * dt);
 }
-
-// int main() {
-//     Body b1 = {5e24, 0, 0, 0, 0, 5e3, 0, 2.44e6, "b1"};
-//     Body b2 = {6e24, 1.5e11, 0, 0, 0, 3e4, 0, 3.39e6, "b2"};
-
-//     double dt = 0;
-//     while (true) {
-//         calculate_and_set_velocities_and_positions(&b1, &b2, dt);
-//         printf("dt: %f\n", dt);
-//         printf("b1: %f %f %f\n", b1.x, b1.y, b1.z);
-//         printf("b2: %f %f %f\n", b2.x, b2.y, b2.z);
-//         printf("\n\n");
-//         dt += 1;
-//         sleep(1);
-//     }
-// }
