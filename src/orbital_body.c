@@ -1,6 +1,8 @@
 #include "orbital_body.h"
 #include <math.h>
 
+const double G = 1;
+
 double abs_distance(Body* b1, Body* b2) {
     double dx = b1->position.x - b2->position.x;
     double dy = b1->position.y - b2->position.y;
@@ -22,7 +24,7 @@ Vector3 grav_force_vect_between_two_bodies(Body* b1, Body* b2) {
     Vector3 force_vector;
 
     double r = abs_distance(b1, b2);
-    double abs_force = G * b1->mass * b2->mass / (r*r); // Newton's law of gravitation (G * m1 * m2 / r^2) is magnitude of force
+    double abs_force = G * b1->mass * b2->mass / (r*r); // Newton's law of gravitation: (G * m1 * m2 / r^2) is magnitude of force
 
     Vector3 r_unit = unit_vector_given_distance(b1, b2, r);
     force_vector.x = abs_force * r_unit.x;

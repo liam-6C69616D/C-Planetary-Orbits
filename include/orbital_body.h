@@ -1,11 +1,6 @@
 #ifndef ORBITS_ORBITAL_BODY_H
 #define ORBITS_ORBITAL_BODY_H
-
-typedef struct {
-    double x;
-    double y;
-    double z;
-} Vector3;
+#include <raylib.h>
 
 typedef struct {
     double mass;
@@ -15,7 +10,7 @@ typedef struct {
     char name[16];
 } Body;
 
-const double G = 6.67430e-11; // m^3 kg^-1 s^-2
+extern const double G; // m^3 kg^-1 s^-2
 
 // Euclidean distance between two bodies
 double abs_distance(Body* b1, Body* b2);
