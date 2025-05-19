@@ -8,6 +8,7 @@ typedef struct {
     Vector3 velocity;
     double radius;
     char name[16];
+    Color color;
 } Body;
 
 extern const double G; // m^3 kg^-1 s^-2
@@ -29,5 +30,8 @@ Vector3 acceleration_vector(Body* b1, Vector3 force);
 
 // Calculate the new velocities and positions of b1 due to b2 at time difference dt
 void update_body(Body* body, Vector3 acceleration, double dt);
+
+// Generate bodies with random positions and velocities
+void generate_bodies(int num_bodies, Body* bodies);
 
 #endif
